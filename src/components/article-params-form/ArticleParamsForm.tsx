@@ -2,7 +2,7 @@ import { ArrowButton } from 'src/ui/arrow-button';
 import { Button } from 'src/ui/button';
 
 import styles from './ArticleParamsForm.module.scss';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import clsx from 'clsx';
 
 import { useArticleContext } from 'src/contexts/ArticleContext';
@@ -19,6 +19,7 @@ import {
 	fontSizeOptions,
 	OptionType,
 } from 'src/constants/articleProps';
+import { useOutsideClickClose } from 'src/ui/select/hooks/useOutsideClickClose';
 
 export const ArticleParamsForm = () => {
 	const { articleState, setArticleState } = useArticleContext();
@@ -38,6 +39,14 @@ export const ArticleParamsForm = () => {
 	const [selectedContentWidth, setSelectedContentWidth] = useState<OptionType>(
 		articleState.contentWidth
 	);
+
+	const rootRef = useRef<HTMLDivElement>(null);
+
+	useOutsideClickClose({
+		isOpen: isFormOpen,
+		rootRef,
+		onChange: setIsFormOpen,
+	});
 
 	const handleOpenFormClick = () => {
 		setIsFormOpen(!isFormOpen);
@@ -85,9 +94,10 @@ export const ArticleParamsForm = () => {
 		<>
 			<ArrowButton isOpen={isFormOpen} onClick={handleOpenFormClick} />
 			<aside
+				ref={rootRef}
 				className={clsx([
 					styles.container,
-					isFormOpen && styles.container_open,
+					{ [styles.container_open]: isFormOpen },
 				])}>
 				<form className={styles.form} onSubmit={submitForm}>
 					<Text weight={800} size={31}>
