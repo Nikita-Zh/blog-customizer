@@ -1,5 +1,12 @@
 import styles from './index.module.scss';
+import clsx from 'clsx';
 
-export const Separator = () => {
-	return <div className={styles.separator}></div>;
+export const Separator = ({ style }: { style?: 'dark' | 'light' }) => {
+	return (
+		<div
+			className={clsx([
+				styles.separator,
+				{ [styles.light]: style === 'light' },
+			])}></div>
+	);
 };
